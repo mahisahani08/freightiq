@@ -27,17 +27,17 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
   const targetPort = PORTS.find(p => p.name.toLowerCase().includes(selectedPort.toLowerCase())) || PORTS[3];
 
   return (
-    <div className="bg-gradient-to-br from-[#0a182f] via-[#0f2342] to-[#071326] rounded-2xl p-5 text-white shadow-xl border border-blue-900/40 relative overflow-hidden">
+    <div className="bg-gradient-to-br from-[#08140e] via-[#0d2116] to-[#060c08] rounded-2xl p-5 text-white shadow-2xl border border-emerald-900/40 relative overflow-hidden">
       {/* Decorative Grid Lines & Radar Rings */}
-      <div className="absolute inset-0 bg-[radial-gradient(#1e3a66_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#1e442d_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
 
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-blue-800/40 pb-4 relative z-10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1b3d28] pb-4 relative z-10">
         <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-[11px] font-bold text-cyan-400 uppercase tracking-widest">
-            <Compass className="w-3.5 h-3.5 animate-spin-slow text-cyan-400" />
+          <div className="flex items-center space-x-2 text-[11px] font-bold text-emerald-400 uppercase tracking-widest">
+            <Compass className="w-3.5 h-3.5 animate-spin-slow text-emerald-400" />
             <span>Interactive Maritime Corridor Radar</span>
-            <span className="text-blue-400">•</span>
+            <span className="text-amber-400">•</span>
             <span className="text-slate-300">East Coast India Inbound Lanes</span>
           </div>
           <h3 className="text-base font-extrabold text-white tracking-tight flex items-center space-x-2">
@@ -54,8 +54,8 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
               onClick={() => setActiveOrigin(org)}
               className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
                 activeOrigin.id === org.id
-                  ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
-                  : 'bg-blue-950/70 text-slate-300 hover:text-white hover:bg-blue-900/60 border border-blue-800/40'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold shadow-md shadow-emerald-500/30'
+                  : 'bg-[#0b1b12] text-slate-300 hover:text-white hover:bg-[#12281c] border border-[#1b3d28]'
               }`}
             >
               {org.name.split(' (')[0]}
@@ -75,14 +75,14 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
           <defs>
             {/* Gradients */}
             <radialGradient id="oceanGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#0e2a52" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#071326" stopOpacity="0" />
+              <stop offset="0%" stopColor="#0e2a1d" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#060c08" stopOpacity="0" />
             </radialGradient>
 
             <linearGradient id="routeLineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.9" />
-              <stop offset="50%" stopColor="#38bdf8" stopOpacity="1" />
-              <stop offset="100%" stopColor="#10b981" stopOpacity="0.9" />
+              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.95" />
+              <stop offset="50%" stopColor="#fbbf24" stopOpacity="1" />
+              <stop offset="100%" stopColor="#10b981" stopOpacity="0.95" />
             </linearGradient>
 
             <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
@@ -95,36 +95,36 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
           <rect width="900" height="480" fill="url(#oceanGlow)" rx="16" />
 
           {/* Nautical Latitude / Longitude Grid lines */}
-          <line x1="50" y1="120" x2="850" y2="120" stroke="#162e52" strokeWidth="1" strokeDasharray="4 6" opacity="0.6" />
-          <line x1="50" y1="240" x2="850" y2="240" stroke="#1e3e6b" strokeWidth="1" strokeDasharray="4 6" opacity="0.8" />
-          <line x1="50" y1="360" x2="850" y2="360" stroke="#162e52" strokeWidth="1" strokeDasharray="4 6" opacity="0.6" />
-          <line x1="220" y1="50" x2="220" y2="440" stroke="#162e52" strokeWidth="1" strokeDasharray="4 6" opacity="0.6" />
-          <line x1="450" y1="50" x2="450" y2="440" stroke="#1e3e6b" strokeWidth="1" strokeDasharray="4 6" opacity="0.8" />
-          <line x1="680" y1="50" x2="680" y2="440" stroke="#162e52" strokeWidth="1" strokeDasharray="4 6" opacity="0.6" />
+          <line x1="50" y1="120" x2="850" y2="120" stroke="#163321" strokeWidth="1" strokeDasharray="4 6" opacity="0.6" />
+          <line x1="50" y1="240" x2="850" y2="240" stroke="#1e452c" strokeWidth="1" strokeDasharray="4 6" opacity="0.8" />
+          <line x1="50" y1="360" x2="850" y2="360" stroke="#163321" strokeWidth="1" strokeDasharray="4 6" opacity="0.6" />
+          <line x1="220" y1="50" x2="220" y2="440" stroke="#163321" strokeWidth="1" strokeDasharray="4 6" opacity="0.6" />
+          <line x1="450" y1="50" x2="450" y2="440" stroke="#1e452c" strokeWidth="1" strokeDasharray="4 6" opacity="0.8" />
+          <line x1="680" y1="50" x2="680" y2="440" stroke="#163321" strokeWidth="1" strokeDasharray="4 6" opacity="0.6" />
 
           {/* Stylized Continents & Coastlines */}
           {/* Indian Subcontinent Path */}
           <path
             d="M 330 70 L 370 70 L 410 90 L 450 110 L 460 140 L 452 170 L 444 195 L 434 214 L 418 234 L 406 254 L 398 270 L 380 295 L 366 315 L 350 300 L 338 275 L 326 240 L 320 200 L 315 150 L 325 110 Z"
-            fill="#132a4a"
-            stroke="#1d4375"
+            fill="#12241b"
+            stroke="#1d4532"
             strokeWidth="1.5"
-            opacity="0.85"
+            opacity="0.9"
           />
 
           {/* Sri Lanka */}
           <path
             d="M 378 322 C 385 322 390 332 388 340 C 385 348 375 348 372 340 Z"
-            fill="#132a4a"
-            stroke="#1d4375"
+            fill="#12241b"
+            stroke="#1d4532"
             strokeWidth="1"
           />
 
           {/* Arabian Peninsula & Middle East */}
           <path
             d="M 180 130 L 250 130 L 260 160 L 275 190 L 265 220 L 240 240 L 210 230 L 195 190 Z"
-            fill="#0f223d"
-            stroke="#18365e"
+            fill="#0f1d16"
+            stroke="#183827"
             strokeWidth="1.2"
             opacity="0.7"
           />
@@ -132,8 +132,8 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
           {/* East Africa */}
           <path
             d="M 210 240 L 240 260 L 250 290 L 260 340 L 255 390 L 245 420 L 220 440 L 190 400 L 180 320 L 190 260 Z"
-            fill="#0f223d"
-            stroke="#18365e"
+            fill="#0f1d16"
+            stroke="#183827"
             strokeWidth="1.2"
             opacity="0.7"
           />
@@ -141,8 +141,8 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
           {/* Southeast Asia & Indonesia */}
           <path
             d="M 520 130 L 560 140 L 580 180 L 565 230 L 550 260 L 538 280 L 555 285 L 590 270 L 630 260 L 660 280 L 670 320 L 630 330 L 570 335 L 520 300 Z"
-            fill="#0f223d"
-            stroke="#18365e"
+            fill="#0f1d16"
+            stroke="#183827"
             strokeWidth="1.2"
             opacity="0.7"
           />
@@ -150,8 +150,8 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
           {/* Australia */}
           <path
             d="M 720 330 L 760 310 L 800 320 L 830 350 L 840 400 L 810 435 L 750 435 L 710 400 L 715 360 Z"
-            fill="#0f223d"
-            stroke="#18365e"
+            fill="#0f1d16"
+            stroke="#183827"
             strokeWidth="1.2"
             opacity="0.7"
           />
@@ -172,7 +172,7 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
           <path
             d="M 790 360 Q 620 330 430 214"
             fill="none"
-            stroke="#1e3a66"
+            stroke="#1d402b"
             strokeWidth="1.2"
             strokeDasharray="4 6"
             opacity="0.5"
@@ -180,7 +180,7 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
           <path
             d="M 260 390 Q 330 340 404 254"
             fill="none"
-            stroke="#1e3a66"
+            stroke="#1d402b"
             strokeWidth="1.2"
             strokeDasharray="4 6"
             opacity="0.5"
@@ -188,7 +188,7 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
           <path
             d="M 640 295 Q 520 280 436 198"
             fill="none"
-            stroke="#1e3a66"
+            stroke="#1d402b"
             strokeWidth="1.2"
             strokeDasharray="4 6"
             opacity="0.5"
@@ -199,7 +199,7 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
             cx={(activeOrigin.x * 0.45 + targetPort.x * 0.55)}
             cy={(activeOrigin.y * 0.45 + targetPort.y * 0.55 + 25)}
             r="6"
-            fill="#22d3ee"
+            fill="#fbbf24"
             filter="url(#glowEffect)"
           >
             <animate
@@ -221,18 +221,18 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
                 transform={`translate(${org.x}, ${org.y})`}
               >
                 {isSelected && (
-                  <circle r="14" fill="#06b6d4" opacity="0.2" className="animate-ping" />
+                  <circle r="14" fill="#f59e0b" opacity="0.25" className="animate-ping" />
                 )}
                 <circle
                   r={isSelected ? 7 : 5}
-                  fill={isSelected ? '#06b6d4' : '#64748b'}
+                  fill={isSelected ? '#f59e0b' : '#64748b'}
                   stroke="#ffffff"
                   strokeWidth="1.5"
                 />
                 <text
                   x="10"
                   y="4"
-                  fill={isSelected ? '#38bdf8' : '#94a3b8'}
+                  fill={isSelected ? '#fbbf24' : '#94a3b8'}
                   fontSize="10"
                   fontWeight={isSelected ? 'bold' : 'normal'}
                   fontFamily="sans-serif"
@@ -258,13 +258,13 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
               >
                 {isSelected && (
                   <>
-                    <circle r="16" fill="#10b981" opacity="0.25" className="animate-ping" />
-                    <circle r="10" fill="#10b981" opacity="0.4" />
+                    <circle r="16" fill="#10b981" opacity="0.3" className="animate-ping" />
+                    <circle r="10" fill="#10b981" opacity="0.5" />
                   </>
                 )}
                 <circle
                   r={isSelected ? 6 : 4.5}
-                  fill={isSelected ? '#10b981' : port.lighterage ? '#f59e0b' : '#38bdf8'}
+                  fill={isSelected ? '#10b981' : port.lighterage ? '#f59e0b' : '#34d399'}
                   stroke="#ffffff"
                   strokeWidth="1.5"
                 />
@@ -285,10 +285,10 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
         </svg>
 
         {/* Floating Telemetry HUD Card on Active Route */}
-        <div className="absolute bottom-2 left-2 bg-[#091830]/90 backdrop-blur-md border border-cyan-500/40 rounded-xl p-3 text-xs max-w-xs shadow-xl hidden md:block">
-          <div className="flex items-center justify-between pb-1.5 border-b border-blue-900/60 mb-2">
-            <span className="font-extrabold text-cyan-300 text-[11px] flex items-center space-x-1.5">
-              <Navigation className="w-3.5 h-3.5 text-cyan-400" />
+        <div className="absolute bottom-2 left-2 bg-[#09150e]/90 backdrop-blur-md border border-emerald-500/40 rounded-xl p-3 text-xs max-w-xs shadow-xl hidden md:block">
+          <div className="flex items-center justify-between pb-1.5 border-b border-[#1b3d28] mb-2">
+            <span className="font-extrabold text-emerald-300 text-[11px] flex items-center space-x-1.5">
+              <Navigation className="w-3.5 h-3.5 text-emerald-400" />
               <span>Active Voyage Telemetry</span>
             </span>
             <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-500/30">
@@ -302,7 +302,7 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
             </div>
             <div className="flex justify-between text-slate-300">
               <span>Voyage Duration:</span>
-              <strong className="text-cyan-300">~{activeOrigin.days} (@ 13.5 kts)</strong>
+              <strong className="text-amber-300">~{activeOrigin.days} (@ 13.5 kts)</strong>
             </div>
             <div className="flex justify-between text-slate-300">
               <span>Discharge Port:</span>
@@ -319,9 +319,9 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
       </div>
 
       {/* Port Quick Selector Strip */}
-      <div className="mt-3 pt-3 border-t border-blue-800/40 flex items-center justify-between flex-wrap gap-2 text-xs">
+      <div className="mt-3 pt-3 border-t border-[#1b3d28] flex items-center justify-between flex-wrap gap-2 text-xs">
         <div className="flex items-center space-x-2 text-slate-300 text-[11px]">
-          <Anchor className="w-3.5 h-3.5 text-cyan-400" />
+          <Anchor className="w-3.5 h-3.5 text-emerald-400" />
           <span className="font-semibold">East Coast Terminal Grid:</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -335,12 +335,12 @@ export default function MaritimeRouteMap({ selectedPort = 'Paradip', onSelectPor
                 }}
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isSelected
-                    ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20'
-                    : 'bg-[#0f2342] text-slate-300 hover:text-white border border-blue-800/40'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20'
+                    : 'bg-[#0e2116] text-slate-300 hover:text-white border border-[#1b3d28]'
                 }`}
               >
                 <span>{port.name}</span>
-                <span className={`text-[9px] px-1 rounded ${isSelected ? 'bg-black/20 text-slate-950 font-extrabold' : 'bg-blue-900/60 text-cyan-300'}`}>
+                <span className={`text-[9px] px-1 rounded ${isSelected ? 'bg-black/20 text-slate-950 font-extrabold' : 'bg-emerald-950/80 text-emerald-300'}`}>
                   {port.draft}
                 </span>
               </button>

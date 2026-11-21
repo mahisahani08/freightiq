@@ -46,22 +46,22 @@ const navSections = [
 
 export default function Sidebar({ activePage, setActivePage }) {
   return (
-    <aside className="w-64 bg-[#081325] border-r border-[#152747] flex flex-col shrink-0 select-none shadow-2xl z-40">
+    <aside className="w-64 bg-[#050a07] border-r border-[#14291e] flex flex-col shrink-0 select-none shadow-2xl z-40">
       {/* Brand & SAIL Identity */}
-      <div className="h-16 px-4 border-b border-[#152747] flex items-center space-x-3 bg-[#060e1d]">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-cyan-900/40 shrink-0">
-          <Ship className="w-5 h-5 text-cyan-100" />
+      <div className="h-16 px-4 border-b border-[#14291e] flex items-center space-x-3 bg-[#040806]">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-emerald-950/60 shrink-0 border border-emerald-400/30">
+          <Ship className="w-5 h-5 text-emerald-100" />
         </div>
         <div className="min-w-0">
           <div className="font-extrabold text-white text-base tracking-tight flex items-center space-x-1.5">
-            <span className="bg-gradient-to-r from-white via-cyan-100 to-cyan-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-300 via-teal-200 to-amber-200 bg-clip-text text-transparent">
               FreightIQ
             </span>
-            <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-1.5 py-0.2 rounded border border-cyan-400/30 font-mono font-bold">
+            <span className="text-[10px] bg-emerald-950/80 text-emerald-300 px-1.5 py-0.2 rounded border border-emerald-700/50 font-mono font-bold">
               v2.4
             </span>
           </div>
-          <p className="text-[11px] text-cyan-200/60 truncate font-medium">Ministry of Steel • SAIL</p>
+          <p className="text-[11px] text-emerald-300/70 truncate font-medium">Ministry of Steel • SAIL</p>
         </div>
       </div>
 
@@ -81,20 +81,20 @@ export default function Sidebar({ activePage, setActivePage }) {
                   onClick={() => setActivePage(item.id)}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-950/60 font-bold pl-3.5'
-                      : 'text-slate-300 hover:text-white hover:bg-[#112340]'
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg shadow-emerald-950/80 font-bold pl-3.5 border border-emerald-400/40'
+                      : 'text-slate-300 hover:text-white hover:bg-[#0d1a13]'
                   }`}
                 >
                   <div className="flex items-center space-x-2.5 truncate">
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-cyan-400/80'}`} />
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-emerald-400'}`} />
                     <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge && (
                     <span
                       className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md ${
                         isActive
-                          ? 'bg-white/25 text-white'
-                          : 'bg-[#12233f] text-cyan-300 border border-cyan-900/50'
+                          ? 'bg-white/20 text-white'
+                          : 'bg-[#0f1f17] text-amber-300 border border-amber-900/50'
                       }`}
                     >
                       {item.badge}
@@ -107,22 +107,13 @@ export default function Sidebar({ activePage, setActivePage }) {
         ))}
       </div>
 
-      {/* Bottom Telemetry Box */}
-      <div className="p-3 border-t border-[#152747] bg-[#060e1d]">
-        <div className="bg-[#0b1c38] rounded-xl p-2.5 border border-cyan-900/40 space-y-1.5 text-[11px]">
-          <div className="flex items-center justify-between text-cyan-300 font-bold">
-            <span className="flex items-center space-x-1.5">
-              <Navigation className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Fleet Dispatch Hub</span>
-            </span>
-            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-1 py-0.2 rounded border border-emerald-500/30">
-              Active
-            </span>
-          </div>
-          <div className="text-[10px] text-slate-400 leading-tight">
-            Monitoring 7 East Coast discharge berths & 6 overseas bulk origins.
-          </div>
+      {/* Footer Profile */}
+      <div className="p-3 border-t border-[#14291e] bg-[#040806] flex items-center justify-between text-xs text-slate-400">
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[11px] font-medium text-emerald-200">SAIL Dispatch Central</span>
         </div>
+        <span className="font-mono text-[10px] text-amber-400 font-bold">ACTIVE</span>
       </div>
     </aside>
   );

@@ -8,9 +8,22 @@ import {
   Compass,
   CheckCircle2,
   Wind,
-  Bell
+  Bell,
+  Play,
+  TrendingUp,
+  Cpu
 } from 'lucide-react';
-import { fetchRiskProfile } from '../services/api';
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Cell
+} from 'recharts';
+import { fetchRiskProfile, fetchMonteCarloSimulation } from '../services/api';
 
 const DEFAULT_RISK_DATA = {
   overall_risk_score: 57.6,
@@ -66,159 +79,299 @@ const FACTOR_TITLE_MAP = {
 
 export default function RiskMonitoringView() {
   const [riskData, setRiskData] = useState(DEFAULT_RISK_DATA);
-  const [loading, setLoading] = useState(false);
+  const [mcLoading, setMcLoading] = useState(false);
+  const [mcData, setMcData] = useState(null);
+  const [vesselClass, setVesselClass] = useState('Capesize');
+  const [destPort, setDestPort] = useState('Paradip');
+  const [cargoQty, setCargoQty] = useState(150000);
 
   useEffect(() => {
     async function load() {
       try {
-        const data = await fetchRiskProfile();
-        if (data && data.overall_risk_score !== undefined) {
-          setRiskData(data);
+        const [rData, mSim] = await Promise.all([
+          fetchRiskProfile().catch(() => null),
+          fetchMonteCarloSimulation({
+            vessel_class: vesselClass,
+            dest_port: destPort,
+            cargo_quantity_mt: cargoQty,
+            iterations: 1000
+          }).catch(() => null)
+        ]);
+
+        if (rData && rData.overall_risk_score !== undefined) {
+          setRiskData(rData);
+        }
+        if (mSim) {
+          setMcData(mSim);
         }
       } catch (err) {
-        console.error('Background risk refresh error (using default data):', err);
+        console.error('Error loading risk telemetry:', err);
       }
     }
     load();
   }, []);
 
-  const overallScore = riskData.overall_risk_score ?? 58;
-  const overallCategory = riskData.overall_risk_category ?? 'MEDIUM';
-  const volatility = riskData.historical_volatility_30d_pct ?? 14.2;
-  const alerts = riskData.active_alerts || [];
-  const breakdownEntries = Object.entries(riskData.risk_breakdown || {});
+  const runSimulation = async () => {
+    setMcLoading(true);
+    try {
+      const data = await fetchMonteCarloSimulation({
+        vessel_class: vesselClass,
+        dest_port: destPort,
+        cargo_quantity_mt: cargoQty,
+        iterations: 1000
+      });
+      if (data) setMcData(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setMcLoading(false);
+    }
+  };
+
+  const overallScore = riskData?.overall_risk_score ?? 58;
+  const overallCategory = riskData?.overall_risk_category ?? 'MEDIUM';
+  const volatility = riskData?.historical_volatility_30d_pct ?? 14.2;
+  const alerts = riskData?.active_alerts || [];
+  const breakdownEntries = Object.entries(riskData?.risk_breakdown || {});
 
   return (
     <div className="space-y-6">
       {/* Header Context Bar */}
       <div className="fi-card p-5 space-y-4 border-t-4 border-t-rose-500">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#193324] pb-3">
           <div>
-            <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
-              <ShieldAlert className="w-4 h-4 text-rose-600" />
+            <h2 className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center space-x-2">
+              <ShieldAlert className="w-4 h-4 text-rose-400" />
               <span>Multi-Factor Maritime Risk & Volatility Intelligence</span>
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Composite index evaluating ocean freight rate volatility, berth congestion risk, bunker fuel trends, and seasonal disruption corridors.
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live composite risk scoring, bunker volatility, congestion alerts, and 1,000-run Monte Carlo Value-at-Risk modeling.
             </p>
           </div>
-          <span className="text-xs font-mono text-cyan-800 bg-cyan-50 px-2.5 py-1 rounded-xl border border-cyan-200 font-bold">
-            30-Day Volatility: ±{volatility}%
-          </span>
-        </div>
-
-        {/* Risk Index Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-1">
-          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">Composite Risk Score</span>
-            <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-extrabold text-slate-900 font-mono">
-                {overallScore}
-              </span>
-              <span className="text-xs text-slate-500 font-bold">/ 100</span>
-            </div>
-            <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
-              <div
-                className={`h-full ${
-                  overallScore > 60
-                    ? 'bg-rose-500'
-                    : overallScore > 35
-                    ? 'bg-amber-500'
-                    : 'bg-emerald-500'
-                }`}
-                style={{ width: `${overallScore}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">Overall Risk Level</span>
-            <div className="text-2xl font-extrabold font-mono pt-1">
-              <span
-                className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  overallCategory === 'HIGH'
-                    ? 'bg-rose-100 text-rose-800 border border-rose-300'
-                    : overallCategory === 'MEDIUM'
-                    ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                    : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                }`}
-              >
-                {overallCategory} SEVERITY
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 pt-1">Threshold monitored every 24 hours</p>
-          </div>
-
-          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">Primary Threat Factor</span>
-            <div className="text-sm font-extrabold text-slate-900 pt-1">
-              East Coast Port Congestion (Haldia / Paradip)
-            </div>
-            <p className="text-[11px] text-slate-500 pt-1">Pre-berthing delay exceeds 96 hours</p>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-mono text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded-xl border border-amber-800/60 font-bold">
+              30d Vol: {volatility}%
+            </span>
+            <span
+              className={`text-xs font-mono font-extrabold px-3 py-1 rounded-xl border ${
+                overallCategory === 'HIGH'
+                  ? 'text-rose-300 bg-rose-950/60 border-rose-800/60'
+                  : overallCategory === 'MEDIUM'
+                  ? 'text-amber-300 bg-amber-950/60 border-amber-800/60'
+                  : 'text-emerald-300 bg-emerald-950/60 border-emerald-800/60'
+              }`}
+            >
+              RISK INDEX: {overallScore}/100 ({overallCategory})
+            </span>
           </div>
         </div>
-      </div>
 
-      {/* Active Operational Alerts */}
-      {alerts.length > 0 && (
-        <div className="fi-card p-5 space-y-3 border-t-4 border-t-amber-500">
-          <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
-            <Bell className="w-4 h-4 text-amber-600" />
-            <span>Active Operational Bulletins & Notices</span>
-          </h3>
-          <div className="space-y-2">
+        {/* Live Port & Fleet Bulletins */}
+        <div className="bg-[#0a1410] border border-[#193324] rounded-xl p-3.5 space-y-2">
+          <div className="flex items-center space-x-2 text-xs font-bold text-amber-400">
+            <Bell className="w-3.5 h-3.5" />
+            <span className="uppercase tracking-wider">Active Strategic Advisory Bulletins</span>
+          </div>
+          <div className="space-y-1.5 text-xs">
             {alerts.map((al, idx) => (
-              <div key={idx} className="flex items-start space-x-2 bg-amber-50/70 p-3 rounded-xl border border-amber-200 text-xs text-amber-950 font-medium">
-                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                <span>{al}</span>
+              <div key={idx} className="flex items-start space-x-2 text-slate-300">
+                <span className="text-amber-400 font-bold shrink-0">•</span>
+                <span className="leading-relaxed">{al}</span>
               </div>
             ))}
           </div>
         </div>
-      )}
+      </div>
 
-      {/* 5 Risk Factors Cards */}
-      <div className="space-y-3">
-        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-          Individual Maritime Risk Vectors & Mitigation Recommendations
-        </h3>
+      {/* Advanced Monte Carlo Stochastic Simulation Sandbox */}
+      <div className="fi-card p-5 space-y-5 border-t-4 border-t-amber-500">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#193324] pb-3">
+          <div>
+            <div className="flex items-center space-x-2">
+              <Cpu className="w-4 h-4 text-amber-400" />
+              <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">
+                1,000-Iteration Stochastic Monte Carlo Risk Engine
+              </h3>
+              <span className="text-[10px] font-mono text-emerald-300 bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-800/60">
+                Geometric Brownian Motion + Gamma Queuing
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Simulates 1,000 randomized voyage variations incorporating bunker price spikes, tidal swell hold-ups, and queue demurrage to determine 95% Value-at-Risk (VaR).
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {breakdownEntries.map(([key, factor]) => {
-            const title = FACTOR_TITLE_MAP[key] || key.replace(/_/g, ' ').toUpperCase();
-            const category = factor.category || 'MEDIUM';
-            const score = factor.score || 50;
+          {/* Quick Simulation Parameter Controls */}
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={vesselClass}
+              onChange={(e) => setVesselClass(e.target.value)}
+              className="text-xs px-2.5 py-1.5 rounded-lg font-bold bg-[#0a1410] border border-[#193324]"
+            >
+              <option value="Capesize">Capesize (175k MT)</option>
+              <option value="Panamax">Panamax (75k MT)</option>
+              <option value="Supramax">Supramax (55k MT)</option>
+            </select>
+            <select
+              value={destPort}
+              onChange={(e) => setDestPort(e.target.value)}
+              className="text-xs px-2.5 py-1.5 rounded-lg font-bold bg-[#0a1410] border border-[#193324]"
+            >
+              <option value="Paradip">Paradip Port</option>
+              <option value="Dhamra">Dhamra Port</option>
+              <option value="Visakhapatnam">Visakhapatnam</option>
+              <option value="Haldia">Haldia Port</option>
+            </select>
+            <button
+              onClick={runSimulation}
+              disabled={mcLoading}
+              className="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white text-xs font-bold rounded-lg flex items-center space-x-1.5 transition-all shadow-md shadow-emerald-950/60 cursor-pointer disabled:opacity-50 border border-emerald-400/30"
+            >
+              <Play className={`w-3.5 h-3.5 ${mcLoading ? 'animate-spin' : ''}`} />
+              <span>{mcLoading ? 'Simulating...' : 'Run 1k Runs'}</span>
+            </button>
+          </div>
+        </div>
 
-            return (
-              <div key={key} className="fi-card p-5 space-y-3 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900 text-sm">{title}</span>
-                    <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        category === 'HIGH'
-                          ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                          : category === 'MEDIUM'
-                          ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                          : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                      }`}
-                    >
-                      {category} ({score} / 100)
-                    </span>
-                  </div>
+        {mcData && (
+          <div className="space-y-4">
+            {/* Simulation KPI Metrics Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              <div className="bg-[#0a1410] p-3.5 rounded-xl border border-[#193324]">
+                <span className="text-slate-400 text-[10px] block font-bold uppercase">Mean Simulated Cost</span>
+                <span className="text-xl font-extrabold text-white font-mono">
+                  ${mcData.mean_cost_per_mt_usd?.toFixed(2)}
+                </span>
+                <span className="text-slate-500 text-[10px] block mt-0.5">Std Dev: ±${mcData.std_dev_usd?.toFixed(2)}/MT</span>
+              </div>
 
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {factor.description}
-                  </p>
+              <div className="bg-[#0a1410] p-3.5 rounded-xl border border-amber-800/40">
+                <span className="text-amber-300 text-[10px] block font-bold uppercase">P95 Value-at-Risk (VaR)</span>
+                <span className="text-xl font-extrabold text-amber-300 font-mono">
+                  ${mcData.p95_var_usd?.toFixed(2)}
+                </span>
+                <span className="text-slate-400 text-[10px] block mt-0.5">95% of voyages complete under this rate</span>
+              </div>
+
+              <div className="bg-[#0a1410] p-3.5 rounded-xl border border-rose-800/40">
+                <span className="text-rose-400 text-[10px] block font-bold uppercase">Total VaR Exposure</span>
+                <span className="text-xl font-extrabold text-rose-300 font-mono">
+                  ${(mcData.value_at_risk_95_total_usd || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                </span>
+                <span className="text-slate-400 text-[10px] block mt-0.5">P99 Extreme: ${mcData.p99_worst_case_usd?.toFixed(2)}/MT</span>
+              </div>
+
+              <div className="bg-[#0a1410] p-3.5 rounded-xl border border-emerald-800/40">
+                <span className="text-emerald-400 text-[10px] block font-bold uppercase">Budget Overrun Risk</span>
+                <span className="text-xl font-extrabold text-emerald-300 font-mono">
+                  {mcData.budget_overrun_probability_pct}%
+                </span>
+                <span className="text-slate-400 text-[10px] block mt-0.5">Probability cost &gt; mean benchmark</span>
+              </div>
+            </div>
+
+            {/* Monte Carlo Probability Distribution Histogram */}
+            <div className="bg-[#0a1410] p-4 rounded-xl border border-[#193324]">
+              <div className="flex items-center justify-between mb-3 text-xs">
+                <span className="font-bold text-white uppercase tracking-wider">
+                  Cost Frequency Distribution (1,000 Iteration Histogram)
+                </span>
+                <span className="text-slate-400 font-mono text-[11px]">
+                  P5: ${mcData.p5_best_case_usd} • Median: ${mcData.p50_median_usd} • P95: ${mcData.p95_var_usd}
+                </span>
+              </div>
+              <div className="h-56 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={mcData.distribution_bins || []} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#162e20" />
+                    <XAxis
+                      dataKey="cost_bin"
+                      stroke="#64748b"
+                      fontSize={10}
+                      tickLine={false}
+                      angle={-25}
+                      textAnchor="end"
+                    />
+                    <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#0d1813',
+                        borderColor: '#f59e0b',
+                        borderRadius: '10px',
+                        color: '#ffffff',
+                        fontSize: '11px'
+                      }}
+                      formatter={(val) => [`${val} Voyages`, 'Iterations']}
+                    />
+                    <Bar dataKey="frequency" radius={[6, 6, 0, 0]}>
+                      {(mcData.distribution_bins || []).map((entry, index) => {
+                        const isTail = index >= 7;
+                        return (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={isTail ? '#f43f5e' : index >= 4 ? '#f59e0b' : '#10b981'}
+                          />
+                        );
+                      })}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2 font-mono italic">
+                {mcData.key_risk_takeaway}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Multi-Factor Risk Gauge Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {breakdownEntries.map(([key, factor]) => {
+          const title = FACTOR_TITLE_MAP[key] || key;
+          const score = factor.score || 50;
+          const cat = factor.category || 'MEDIUM';
+
+          const catColor =
+            cat === 'HIGH'
+              ? 'text-rose-400 bg-rose-950/60 border-rose-800/60'
+              : cat === 'MEDIUM'
+              ? 'text-amber-400 bg-amber-950/60 border-amber-800/60'
+              : 'text-emerald-400 bg-emerald-950/60 border-emerald-800/60';
+
+          const barColor =
+            cat === 'HIGH' ? 'bg-rose-500' : cat === 'MEDIUM' ? 'bg-amber-500' : 'bg-emerald-500';
+
+          return (
+            <div key={key} className="fi-card p-4 space-y-3 border-t-2 border-t-[#1f4530]">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-white tracking-tight">{title}</span>
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border ${catColor}`}>
+                  {cat}
+                </span>
+              </div>
+
+              {/* Score Bar */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] font-mono">
+                  <span className="text-slate-400">Factor Severity:</span>
+                  <span className="text-white font-bold">{score}/100</span>
                 </div>
-
-                <div className="pt-3 border-t border-slate-100 bg-slate-50 -mx-5 -mb-5 p-3 rounded-b-2xl text-[11px] text-slate-700">
-                  <strong className="text-slate-900">Key Metric / Mitigation:</strong> {factor.metrics || 'Continuous monitoring'}
+                <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div className={`h-full ${barColor}`} style={{ width: `${score}%` }} />
                 </div>
               </div>
-            );
-          })}
-        </div>
+
+              <p className="text-xs text-slate-300 leading-relaxed min-h-[40px]">
+                {factor.description}
+              </p>
+
+              <div className="pt-2 border-t border-[#193324] text-[11px] font-mono text-emerald-300">
+                {factor.metrics}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

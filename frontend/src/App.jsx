@@ -61,12 +61,12 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#f1f5f9] text-slate-800 font-sans">
-      {/* Deep Navy Corporate Sidebar */}
+    <div className="flex h-screen w-screen overflow-hidden bg-[#070d0a] text-slate-100 font-sans">
+      {/* Deep Jade & Amber Sidebar */}
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
 
-      {/* Main Corporate Content Canvas */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      {/* Main Command Content Canvas */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#070d0a]">
         <Navbar activePageTitle={PAGE_TITLES[activePage] || 'FreightIQ'} />
 
         <main className="flex-1 overflow-y-auto p-5 max-w-7xl w-full mx-auto">

@@ -211,3 +211,74 @@ class ScenarioSimulationResponse(BaseModel):
     baseline_summary: Dict[str, Any]
     scenarios: List[ScenarioOption]
     key_insights: List[str]
+
+# --- Advanced Analytics Schemas ---
+class MonteCarloRequest(BaseModel):
+    cargo_quantity_mt: float = 75000
+    vessel_class: str = "Capesize"
+    origin_port: str = "Hay Point"
+    destination_port: str = "Paradip"
+    num_iterations: int = 1000
+
+class MonteCarloDistributionBin(BaseModel):
+    cost_bin: str
+    frequency: int
+    cumulative_pct: float
+
+class MonteCarloResponse(BaseModel):
+    iterations: int
+    mean_cost_per_mt_usd: float
+    std_dev_usd: float
+    p5_best_case_usd: float
+    p50_median_usd: float
+    p95_var_usd: float
+    p99_worst_case_usd: float
+    value_at_risk_95_total_usd: float
+    expected_shortfall_cvar_95_usd: float
+    budget_overrun_probability_pct: float
+    distribution_bins: List[MonteCarloDistributionBin]
+    key_risk_takeaway: str
+
+class EcoSteamingOption(BaseModel):
+    speed_knots: float
+    steaming_days: float
+    bunker_consumption_total_mt: float
+    bunker_cost_usd: float
+    charter_hire_cost_usd: float
+    port_waiting_exposure_usd: float
+    total_voyage_cost_usd: float
+    cost_per_mt_usd: float
+    co2_emissions_mt: float
+    is_optimal_eco: bool
+
+class EcoSteamingResponse(BaseModel):
+    vessel_class: str
+    route_distance_nm: int
+    design_speed_knots: float
+    optimal_eco_speed_knots: float
+    potential_fuel_savings_usd: float
+    co2_reduction_percentage: float
+    speed_curves: List[EcoSteamingOption]
+    engineering_rationale: str
+
+class MetOceanSeasonalityResponse(BaseModel):
+    current_season: str
+    bay_of_bengal_alert_level: str
+    cyclone_frequency_category: str
+    average_wave_swell_height_m: float
+    anticipated_weather_delay_days: float
+    monsoon_impact_factor: float
+    port_seasonal_status: Dict[str, Dict[str, Any]]
+    logistics_guidance: str
+
+class FeatureImportanceItem(BaseModel):
+    feature_name: str
+    category: str
+    relative_importance_pct: float
+    impact_direction: str
+    description: str
+
+class FeatureImportanceResponse(BaseModel):
+    model_name: str
+    r2_score: float
+    features: List[FeatureImportanceItem]

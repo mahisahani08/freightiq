@@ -12,13 +12,23 @@ from app.core.charter_advisor import generate_charter_recommendation
 from app.core.idle_risk_engine import calculate_idle_and_demurrage, evaluate_risk_profile
 from app.core.scenario_simulator import run_what_if_simulation
 from app.core.database import log_decision, get_recent_decisions
+from app.ml.advanced_analytics import (
+    run_monte_carlo_simulation,
+    compute_eco_steaming_curves,
+    evaluate_metocean_seasonality,
+    get_model_feature_importance,
+)
 from app.models.schemas import (
     ForecastRequest, ForecastResponse, ModelComparisonMetric,
     CargoRequest, VesselOptimizationResponse,
     CharterDecisionRequest, CharterRecommendationResponse,
     IdleTimeRequest, IdleTimeResponse,
     RiskAssessmentResponse,
-    ScenarioSimulationRequest, ScenarioSimulationResponse
+    ScenarioSimulationRequest, ScenarioSimulationResponse,
+    MonteCarloRequest, MonteCarloResponse,
+    EcoSteamingResponse,
+    MetOceanSeasonalityResponse,
+    FeatureImportanceResponse,
 )
 
 router = APIRouter(prefix="/api")
@@ -30,7 +40,7 @@ def get_health_status():
         "system": "FreightIQ - Maritime Decision Support System",
         "organization": "Ministry of Steel (SAIL)",
         "ml_engine": "Operational",
-        "models_available": ["Ridge Regression", "Random Forest", "XGBoost"],
+        "models_available": ["Ridge Regression", "Random Forest", "XGBoost", "Ensemble Blend"],
         "database": "SQLite (Connected)"
     }
 
@@ -65,6 +75,13 @@ def get_models_performance(vessel_class: str = Query("Capesize")):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/models/feature-importance", response_model=FeatureImportanceResponse)
+def get_feature_importance(vessel_class: str = Query("Capesize")):
+    try:
+        return get_model_feature_importance(vessel_class=vessel_class)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.post("/vessels/optimize", response_model=VesselOptimizationResponse)
 def optimize_vessel(req: CargoRequest):
     try:
@@ -75,8 +92,8 @@ def optimize_vessel(req: CargoRequest):
             if opt:
                 log_decision(
                     commodity=req.commodity_type,
-                    qty=req.cargo_quantity_mt,
-                    origin=f"{req.origin_country} - {req.origin_port}",
+                    cargo_mt=req.cargo_quantity_mt,
+                    origin=req.origin_port,
                     dest=req.destination_port,
                     vessel=result.optimal_vessel_class,
                     cost_per_mt=opt.landed_cost_per_mt_usd,
@@ -87,6 +104,23 @@ def optimize_vessel(req: CargoRequest):
         return result
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/vessels/eco-steaming", response_model=EcoSteamingResponse)
+def get_eco_steaming(
+    vessel_class: str = Query("Capesize"),
+    distance_nm: int = Query(4850),
+    cargo_mt: float = Query(75000),
+    bunker_price: float = Query(635.0)
+):
+    try:
+        return compute_eco_steaming_curves(
+            vessel_class=vessel_class,
+            distance_nm=distance_nm,
+            cargo_mt=cargo_mt,
+            bunker_price=bunker_price
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -110,6 +144,20 @@ def analyze_idle_time(req: IdleTimeRequest):
 def get_risk_profile():
     try:
         return evaluate_risk_profile()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/risk/monte-carlo", response_model=MonteCarloResponse)
+def run_monte_carlo(req: MonteCarloRequest):
+    try:
+        return run_monte_carlo_simulation(req)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/ports/metocean", response_model=MetOceanSeasonalityResponse)
+def get_metocean_seasonality():
+    try:
+        return evaluate_metocean_seasonality()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

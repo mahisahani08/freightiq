@@ -5,13 +5,30 @@
     box-sizing: border-box;
   }
   body {
-    background-color: #f1f5f9;
-    color: #0f172a;
+    background-color: #070d0a;
+    color: #e2e8f0;
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
     padding: 0;
+    background-image: 
+      radial-gradient(at 15% 15%, rgba(16, 185, 129, 0.08) 0px, transparent 40%),
+      radial-gradient(at 85% 85%, rgba(245, 158, 11, 0.07) 0px, transparent 40%),
+      radial-gradient(at 50% 50%, rgba(6, 78, 59, 0.04) 0px, transparent 100%);
+    background-attachment: fixed;
+  }
+
+  /* Sleek modern dark inputs & selects in Jade Obsidian */
+  input, select, textarea {
+    background-color: #0a1410 !important;
+    color: #f8fafc !important;
+    border-color: #1a3325 !important;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #10b981 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25) !important;
   }
 }
 
@@ -19,30 +36,24 @@
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
 }
 
-/* Polished Card Elevation & Border Styling */
+/* Maritime Jade & Industrial Gold Card Elevation */
 .fi-card {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
+  background-color: #0d1813;
+  border: 1px solid #193324;
   border-radius: 16px;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 4px 20px -2px rgba(3, 10, 7, 0.7);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  backdrop-filter: blur(12px);
+  color: #e2e8f0;
 }
 
 .fi-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
+  border-color: #2b553e;
+  box-shadow: 0 10px 30px -4px rgba(16, 185, 129, 0.15);
 }
 
 /* Top Accent Stripe variations */
-.fi-card-accent-cyan {
-  border-top: 3px solid #06b6d4;
-}
-
-.fi-card-accent-blue {
-  border-top: 3px solid #2563eb;
-}
-
 .fi-card-accent-emerald {
   border-top: 3px solid #10b981;
 }
@@ -51,26 +62,36 @@
   border-top: 3px solid #f59e0b;
 }
 
-.fi-card-accent-purple {
-  border-top: 3px solid #8b5cf6;
+.fi-card-accent-teal {
+  border-top: 3px solid #14b8a6;
+}
+
+.fi-card-accent-gold {
+  border-top: 3px solid #eab308;
+}
+
+.fi-card-accent-rose {
+  border-top: 3px solid #f43f5e;
 }
 
 /* Interactive Pill Navigation & Segmented Tabs */
 .fi-pill-active {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 2px 6px -1px rgba(2, 132, 199, 0.4);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
 }
 
 .fi-pill-inactive {
-  background-color: transparent;
-  color: #64748b;
+  background-color: #0a1410;
+  color: #94a3b8;
   font-weight: 600;
+  border: 1px solid #193324;
 }
 .fi-pill-inactive:hover {
-  background-color: #f1f5f9;
-  color: #0f172a;
+  background-color: #12241c;
+  color: #f8fafc;
+  border-color: #2b553e;
 }
 
 /* Custom Scrollbars */
@@ -79,14 +100,14 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #070d0a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #193324;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #2b553e;
 }
 
 /* Spin animations */
