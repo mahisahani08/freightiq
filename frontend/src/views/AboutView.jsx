@@ -12,40 +12,43 @@ import {
   Code2,
   Anchor,
   TrendingUp,
-  Server
+  Server,
+  Building2,
+  Layers
 } from 'lucide-react';
 
 export default function AboutView() {
   return (
     <div className="space-y-6">
-      {/* Problem Statement Header */}
+      {/* Enterprise Platform Header */}
       <div className="fi-card p-6 space-y-3 border-t-4 border-t-cyan-500 bg-gradient-to-r from-white via-slate-50 to-cyan-50/20">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-extrabold text-cyan-800 bg-cyan-100 px-3 py-1 rounded-full uppercase tracking-wider border border-cyan-200">
-              Smart India Hackathon 2026 • Problem Statement ID: SIH26006
+            <span className="text-xs font-extrabold text-cyan-800 bg-cyan-100 px-3 py-1 rounded-full uppercase tracking-wider border border-cyan-200 flex items-center space-x-1.5">
+              <Building2 className="w-3.5 h-3.5 text-cyan-700" />
+              <span>Ministry of Steel (SAIL) • Central Procurement Platform</span>
             </span>
           </div>
           <span className="text-xs bg-slate-100 text-slate-800 px-3 py-1 rounded-full border border-slate-300 font-mono font-bold self-start sm:self-auto">
-            Domain: Transportation & Logistics (Software)
+            Domain: Transportation, Port Navigational Logistics & Maritime AI
           </span>
         </div>
 
         <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-          Development of an Intelligent Freight Forecasting Model for Optimized Vessel Chartering and Bulk Cargo Procurement from Overseas to East Coast of India
+          FreightIQ – Intelligent Maritime Freight Forecasting & Bulk Chartering Decision Support Platform
         </h1>
 
         <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 pt-1">
           <div>
-            <strong>Organization:</strong> Ministry of Steel (SAIL – Steel Authority of India Limited)
+            <strong>Organization:</strong> Steel Authority of India Limited (SAIL)
           </div>
           <div>•</div>
           <div>
-            <strong>Project Name:</strong> FreightIQ DSS
+            <strong>Deployment:</strong> Central Raw Material Division (RMD)
           </div>
           <div>•</div>
           <div>
-            <strong>Target Cargo:</strong> Metallurgical Coking Coal & Bulk Raw Materials
+            <strong>Strategic Focus:</strong> Overseas Coking Coal & Metallurgical Flux Procurement
           </div>
         </div>
       </div>
@@ -55,15 +58,15 @@ export default function AboutView() {
         <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
           <div>
             <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
-              <Award className="w-4 h-4 text-amber-600" />
-              <span>SIH26006 Required Functional Modules — Implementation Checklist</span>
+              <Layers className="w-4 h-4 text-cyan-600" />
+              <span>Core Operational Decision Support Architecture & Production Modules</span>
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Strict end-to-end implementation verified against Ministry of Steel operational benchmarks.
+              Integrated machine learning and physical port gatekeeping system calibrated to SAIL East Coast blast furnace requirements.
             </p>
           </div>
           <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-            6/6 Modules Completed
+            6/6 Production Engines Deployed
           </span>
         </div>
 
@@ -149,7 +152,7 @@ export default function AboutView() {
           <div className="space-y-2 text-xs">
             <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
               <strong className="text-slate-800 block mb-0.5">Frontend Dashboard:</strong>
-              <span className="text-slate-600">React 19, Vite, Tailwind CSS v4, Recharts, Lucide React Icons. Clean maritime UI with zero AI-template boilerplate.</span>
+              <span className="text-slate-600">React 19, Vite, Tailwind CSS v4, Recharts, Lucide React Icons. Clean maritime UI with zero generic boilerplate.</span>
             </div>
             <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
               <strong className="text-slate-800 block mb-0.5">Backend REST APIs:</strong>

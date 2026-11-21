@@ -25,7 +25,7 @@ const PAGE_TITLES = {
   simulator: 'What-If Scenario Simulator',
   models: 'Model Benchmark & Cross-Validation',
   data: 'Data Management & Decision Audit Logs',
-  about: 'About Project (SIH26006 - SAIL)',
+  about: 'Platform Architecture & System Documentation',
 };
 
 export default function App() {

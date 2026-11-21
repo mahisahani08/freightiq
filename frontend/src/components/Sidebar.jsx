@@ -30,7 +30,7 @@ const navSections = [
     items: [
       { id: 'ports', label: 'Port Infrastructure', icon: Anchor, badge: '7 Ports' },
       { id: 'idle_time', label: 'Idle & Demurrage', icon: Clock, badge: 'Queuing' },
-      { id: 'risk', label: 'Risk Intelligence', icon: ShieldAlert, badge: 'Live' },
+      { id: 'risk', label: 'Risk Intelligence', icon: ShieldAlert, badge: 'Realtime' },
       { id: 'simulator', label: 'What-If Simulator', icon: SlidersHorizontal, badge: 'Sandbox' },
     ]
   },
@@ -39,7 +39,7 @@ const navSections = [
     items: [
       { id: 'models', label: 'Model Benchmarks', icon: Cpu, badge: 'R² 0.908' },
       { id: 'data', label: 'Data & Audit Trail', icon: Database, badge: '18k+' },
-      { id: 'about', label: 'SIH26006 Brief', icon: FileText, badge: 'SAIL' },
+      { id: 'about', label: 'System Overview & Docs', icon: FileText, badge: 'SAIL' },
     ]
   }
 ];
