@@ -13,7 +13,7 @@ Steel Authority of India Limited (SAIL) imports millions of metric tonnes of met
 Current chartering operations rely heavily on daily market inquiries, manual broker evaluations, and historical heuristics. This creates significant risks:
 1. **Market Timing Uncertainty:** Lack of forward rate forecasting leads to chartering during peak fixtures.
 2. **Navigational Grounding & Draft Risks:** Heavy Capesize bulkers (18.2m draft) face severe draft limits at Indian East Coast ports, especially riverine sandbars at Haldia (8.5m draft limit).
-3. **Severe Demurrage Liabilities:** Berth congestion and pre-berthing wait times (2 to 5 days) burn between **$14,000 and $32,000/day** in demurrage.
+3. **Severe Demurrage Liabilities:** Berth congestion and pre-berthing wait times (2 to 5 days) burn between **USD 14,000 and USD 32,000/day** in demurrage.
 
 **FreightIQ** resolves these challenges by integrating **supervised time-series rate forecasting (XGBoost & Random Forest)**, an **Explainable AI charter timing arbitrator (Spot vs. Time-Charter)**, a **physical port navigational gatekeeper**, and an **idle-time queuing simulator**.
 
@@ -33,7 +33,9 @@ Current chartering operations rely heavily on daily market inquiries, manual bro
 
 ### Module 3: Vessel & Landed-Cost Optimization Engine
 * Complete landed-cost breakdown per metric tonne:
-  $$\text{Landed Cost (\$/MT)} = \text{Ocean Freight} + \text{Bunker Fuel} + \text{Port Dues} + \text{Demurrage Liability} + \text{Offshore Lighterage}$$
+  ```text
+  Landed Cost (USD/MT) = Ocean Freight + Bunker Fuel + Port Dues + Demurrage Liability + Offshore Lighterage
+  ```
 * Dynamic physical constraints checking: Deadweight tonnage (DWT), draft, Length Overall (LOA), beam, and berth handling rates.
 
 ### Module 4: East Coast Port Intelligence Gatekeeper
@@ -48,7 +50,7 @@ Current chartering operations rely heavily on daily market inquiries, manual bro
 
 ### Module 5: Vessel Idle-Time & Demurrage Analyzer
 * $M/M/c$ queuing simulation estimating anchorage waiting hours, pre-berthing queues, and turnaround duration.
-* Financial exposure calculation based on daily demurrage hire rates ($14,000–$32,000/day).
+* Financial exposure calculation based on daily demurrage hire rates (USD 14,000–32,000/day).
 * Alternative port diversion arbitrage identifying potential demurrage savings.
 
 ### Module 6: Risk Intelligence & What-If Scenario Sandbox
@@ -100,8 +102,8 @@ python -m unittest tests/test_all_engines.py
 ## 5. Economic & Strategic Impact for SAIL
 
 1. **Ocean Freight Cost Savings:**
-   Timing coking coal shipments during softening forward rate windows ($0.70–$1.50/MT projected drop) yields net savings of **$105,000 to $225,000 per Capesize fixture** (150,000 MT parcel).
+   Timing coking coal shipments during softening forward rate windows (USD 0.70–1.50/MT projected drop) yields net savings of **USD 105,000 to USD 225,000 per Capesize fixture** (150,000 MT parcel).
 2. **Demurrage Avoidance:**
-   Proactive diversion from congested Haldia/Paradip berths to deepwater Gangavaram/Dhamra eliminates 3–5 days of pre-berthing wait, avoiding **$96,000 to $160,000 in demurrage liabilities**.
+   Proactive diversion from congested Haldia/Paradip berths to deepwater Gangavaram/Dhamra eliminates 3–5 days of pre-berthing wait, avoiding **USD 96,000 to USD 160,000 in demurrage liabilities**.
 3. **Safe Navigational Gatekeeping:**
    Guarantees that large bulk carriers never breach port draft restrictions in the Hooghly estuary by enforcing automated Sandheads lighterage protocol.
